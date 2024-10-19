@@ -2,10 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpmath import mp
 from typing import Callable, Optional, Tuple
-from mpl_toolkits.mplot3d import Axes3D  # For 3D plotting
+from mpl_toolkits.mplot3d import Axes3D 
 from Common.FloatingPointAnalyser import FloatingPointAnalyser
 
-# Include your existing FloatingPointAnalyser class here
 
 class FunctionPerturbationAnalyser:
     def __init__(self, 
@@ -46,7 +45,6 @@ class FunctionPerturbationAnalyser:
         self.b_max = b_max
         self.num_b = num_b
 
-        # Generate values for a and b
         self.a_values = np.linspace(a_min, a_max, num=num_a)
         self.b_values = np.linspace(b_min, b_max, num=num_b)
         mp.dps = self.precision
@@ -62,7 +60,6 @@ class FunctionPerturbationAnalyser:
         for b_idx, b in enumerate(self.b_values):
             for a_idx, a in enumerate(self.a_values):
                 print(f"Processing a={a}, b={b}")
-                # Define a function that only takes x as input
                 def func_a_b(x):
                     return self.func_template(x, a, b)
                 analyser = FloatingPointAnalyser(
@@ -80,14 +77,12 @@ class FunctionPerturbationAnalyser:
                     constant_values=self.constant_values
                 )
                 perturbations, differences = analyser.compute_differences()
-                # Store data
                 perturbations_array[b_idx, a_idx, :, :] = perturbations
                 differences_array[b_idx, a_idx, :, :] = differences
         self.perturbations_array = perturbations_array
         self.differences_array = differences_array
 
     def plot_differences(self):
-        # For 4 samples of b
         num_b_samples = min(4, self.num_b)
         b_indices = np.linspace(0, self.num_b - 1, num_b_samples, dtype=int)
         for b_idx in b_indices:
@@ -95,7 +90,6 @@ class FunctionPerturbationAnalyser:
             fig = plt.figure(figsize=(12, 8))
             ax = fig.add_subplot(111, projection='3d')
             for a_idx, a in enumerate(self.a_values):
-                # Sample a subset of indices to avoid overplotting
                 sample_indices = np.linspace(0, self.sample_size -1, max(1, self.sample_size // 10), dtype=int)
                 for idx in sample_indices:
                     perturbations = self.perturbations_array[b_idx, a_idx, idx, :]

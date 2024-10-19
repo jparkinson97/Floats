@@ -3,17 +3,14 @@ from mpmath import sin
 from mpmath import mp
 import numpy as np
 
-# Define the function template
 def func_template(x, a, b):
     if isinstance(x, mp.mpf):
-        # Convert a and b to mpf types
         a_mp = mp.mpf(a)
         b_mp = mp.mpf(b)
         return a_mp * mp.cos(x) + b_mp
     else:
         return a * np.cos(x) + b
 
-# Set up the analyzer
 analyzer = FunctionPerturbationAnalyser(
     func_template=func_template,
     arg_types=('vary',),  # We are varying x
@@ -28,15 +25,13 @@ analyzer = FunctionPerturbationAnalyser(
     precision=50,
     a_min=0.5,
     a_max=2.0,
-    num_a=10,     # Number of samples for a
+    num_a=10,     
     b_min=-1.0,
     b_max=1.0,
-    num_b=4       # Number of samples for b
+    num_b=4       
 )
 
-# Run the analysis
 analyzer.run_analysis()
 
-# Plot the results
 analyzer.plot_differences()
 
